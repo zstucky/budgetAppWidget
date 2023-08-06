@@ -26,7 +26,6 @@ struct Provider: IntentTimelineProvider {
         let text = userDefaultsShared?.value(forKey: "TEXT") ?? "No Text"
         let textSecondary = userDefaultsShared?.value(forKey: "SECONDARY") ?? "No Text"
 
-        
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
@@ -39,37 +38,6 @@ struct Provider: IntentTimelineProvider {
         completion(timeline)
     }
 }
-/*
-struct Provider2: IntentTimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), text: "", configuration: ConfigurationIntent())
-    }
-
-    func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date(), text: "", configuration: configuration)
-        completion(entry)
-    }
-
-    func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
-        
-        let userDefaultsShared = UserDefaults(suiteName: "group.thereisnowaythisistaken4532")
-        let text = userDefaultsShared?.value(forKey: "SECONDARY") ?? "No Text"
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, text: text as! String, configuration: configuration)
-            entries.append(entry)
-        }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
-    }
-}
- */
-
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
@@ -80,12 +48,12 @@ struct SimpleEntry: TimelineEntry {
 
 struct budgetWidgetEntryView : View {
     var entry: Provider.Entry
-    //var entry2: Provider2.Entry
 
     var body: some View {
         ZStack {
             Color.black
             VStack {
+                //gets the main total and sets the color
                 let oldString = entry.text.split(separator: "$").last
                 let textNum = Double(oldString ?? "error") ?? 0
                 if textNum > 0
@@ -107,6 +75,7 @@ struct budgetWidgetEntryView : View {
                         .font(.system(size: 36))
                 }
                 
+                //gets the secondary total and sets the color
                 let oldStringSecondary = entry.textSecondary.split(separator: "$").last
                 let textNumSecondary = Double(oldStringSecondary ?? "error") ?? 0
                 if textNumSecondary > 0
