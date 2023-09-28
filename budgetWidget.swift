@@ -9,6 +9,19 @@ import WidgetKit
 import SwiftUI
 import Intents
 
+//adapts to new widget background in iOS 17
+extension View {
+    func widgetBackground(_ backgroundView: some View) -> some View {
+        if #available(iOSApplicationExtension 17.0, *) {
+            return containerBackground(for: .widget) {
+                backgroundView
+            }
+        } else {
+            return background(backgroundView)
+        }
+    }
+}
+
 struct Provider: IntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), text: "", textSecondary: "", configuration: ConfigurationIntent())
@@ -48,10 +61,9 @@ struct SimpleEntry: TimelineEntry {
 
 struct budgetWidgetEntryView : View {
     var entry: Provider.Entry
-
+    
     var body: some View {
         ZStack {
-            Color.black
             VStack {
                 //gets the main total and sets the color
                 let oldString = entry.text.split(separator: "$").last
@@ -60,19 +72,19 @@ struct budgetWidgetEntryView : View {
                 {
                     Text(entry.text)
                         .foregroundColor(Color.green)
-                        .font(.system(size: 36))
+                        .font(.system(size: 34))
                 }
                 else if textNum < 0
                 {
                     Text(entry.text)
                         .foregroundColor(Color.red)
-                        .font(.system(size: 36))
+                        .font(.system(size: 34))
                 }
                 else
                 {
                     Text(entry.text)
                         .foregroundColor(Color.white)
-                        .font(.system(size: 36))
+                        .font(.system(size: 34))
                 }
                 
                 //gets the secondary total and sets the color
@@ -96,9 +108,8 @@ struct budgetWidgetEntryView : View {
                         .foregroundColor(Color.white)
                         .font(.system(size: 20))
                 }
-                 
-                
             }
+            .widgetBackground(Color.black)
         }
     }
 }
